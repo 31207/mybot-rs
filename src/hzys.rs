@@ -14,7 +14,7 @@ pub struct HZYS {
 
 #[async_trait]
 impl Handler<MessageEvent> for HZYS {
-    on_command!(MessageEvent, "活字印刷");
+    on_start_with!(MessageEvent, "活字印刷");
 
     async fn handle(&self, event: MessageEvent, matcher: Matcher<MessageEvent>) {
         let cmd: Vec<&str> = event
@@ -22,6 +22,7 @@ impl Handler<MessageEvent> for HZYS {
             .trim()
             .split_ascii_whitespace()
             .collect();
+        println!("Received command: {:?}", cmd);
         let huoziyinshua_command = if let Ok(cmd) = HuoziyinshuaCommand::try_parse_from(cmd) {
             cmd
         } else {
