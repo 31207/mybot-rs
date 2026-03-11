@@ -2,6 +2,8 @@ pub mod helper;
 pub mod meme_api;
 pub mod meme_info;
 pub mod meme_parser;
+pub mod arg_parser;
+pub mod hzys;
 
 #[cfg(test)]
 mod tests {
@@ -16,7 +18,7 @@ mod tests {
                 let val: Result<Vec<meme_info::MemeInfo>, serde_json::Error> =
                     serde_json::from_str(content.as_str());
                 match val {
-                    Ok(val) => {
+                    Ok(_) => {
                         assert!(true);
                     }
                     Err(err) => {

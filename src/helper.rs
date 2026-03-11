@@ -1,11 +1,11 @@
-use nonebot_rs::{matcher::prelude::*, message::UniMessage};
+use nonebot_rs::matcher::prelude::*;
 pub struct Helper {}
 
 #[async_trait]
 impl Handler<MessageEvent> for Helper {
     on_command!(MessageEvent, "help");
 
-    async fn handle(&self, event: MessageEvent, matcher: Matcher<MessageEvent>) {
+    async fn handle(&self, _: MessageEvent, matcher: Matcher<MessageEvent>) {
         matcher.send_text("这是help").await;
     }
 }

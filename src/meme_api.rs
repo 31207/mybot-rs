@@ -1,5 +1,3 @@
-use std::option;
-
 use base64::prelude::*;
 use reqwest;
 use serde::{Deserialize, Serialize};

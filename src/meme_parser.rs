@@ -1,6 +1,4 @@
-use std::fmt::format;
-
-use crate::meme_info::{self, MemeInfo};
+use crate::meme_info::MemeInfo;
 use nonebot_rs::Message;
 use nonebot_rs::{matcher::prelude::*, message::FileType, message::UniMessage};
 use reqwest;
@@ -115,7 +113,7 @@ async fn parse(msg: &Vec<Message>, matcher: &Matcher<MessageEvent>) -> (Vec<Stri
                 }
             }
             Message::At(a) => {
-                if let Ok(qq) = a.qq.parse::<u64>() {
+                if let Ok(_) = a.qq.parse::<u64>() {
                     images.push(format!(
                         "http://q2.qlogo.cn/headimg_dl?dst_uin={}&spec=100",
                         a.qq
