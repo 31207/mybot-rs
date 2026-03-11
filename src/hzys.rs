@@ -1,11 +1,10 @@
-
 use crate::arg_parser::HuoziyinshuaCommand;
 use anyhow::Result;
 use clap::Parser;
 use huoziyinshua_rs::Huoziyinshua;
 use nonebot_rs::matcher::prelude::*;
-use nonebot_rs::message::UniMessage;
 use nonebot_rs::message::FileType;
+use nonebot_rs::message::UniMessage;
 use tokio::sync::Mutex;
 use tracing::{Level, event};
 pub struct HZYS {
@@ -30,54 +29,50 @@ impl Handler<MessageEvent> for HZYS {
             return;
         };
         if huoziyinshua_command.speed < 0.5 || huoziyinshua_command.speed > 2.0 {
-            matcher
-                .send_text("播放速度必须在0.5到2.0之间")
-                .await;
+            matcher.send_text("播放速度必须在0.5到2.0之间").await;
             return;
         }
         if huoziyinshua_command.sentence.is_empty() {
-            matcher
-                .send_text("输入的句子不能为空")
-                .await;
+            matcher.send_text("输入的句子不能为空").await;
             return;
         }
         if huoziyinshua_command.sentence.chars().count() > 100 {
-            matcher
-                .send_text("输入的句子不能超过100个字符")
-                .await;
+            matcher.send_text("输入的句子不能超过100个字符").await;
             return;
         }
         if let Some(huoziyinshua) = self.huoziyinshua.lock().await.as_mut() {
-            let _ = huoziyinshua
-            .generate(&huoziyinshua_command.sentence, true);
+            let _ = huoziyinshua.generate(&huoziyinshua_command.sentence, true);
             let result = huoziyinshua.change_speed(huoziyinshua_command.speed);
             if huoziyinshua_command.reverse {
                 let _ = huoziyinshua.reverse();
             }
-        match result {
-            Ok(_) => {
-                let wav_base64 = if let Ok(w) = huoziyinshua.save_and_get_wav_base64() {
-                    w
-                } else {
-                    matcher.send_text("获取音频文件base64失败").await;
-                    return;
-                };
+            match result {
+                Ok(_) => {
+                    let wav_base64 = if let Ok(w) = huoziyinshua.save_and_get_wav_base64() {
+                        w
+                    } else {
+                        matcher.send_text("获取音频文件base64失败").await;
+                        return;
+                    };
 
-                matcher
-                    .send(UniMessage::new().record(FileType::Base64(wav_base64)).build())
-                    .await;
+                    matcher
+                        .send(
+                            UniMessage::new()
+                                .record(FileType::Base64(wav_base64))
+                                .build(),
+                        )
+                        .await;
+                }
+                Err(err) => {
+                    matcher
+                        .send_text(format!("生成活字印刷失败: {}", err).as_str())
+                        .await;
+                }
             }
-            Err(err) => {
-                matcher
-                    .send_text(format!("生成活字印刷失败: {}", err).as_str())
-                    .await;
-            }
-        }
         } else {
             matcher.send_text("活字印刷未初始化").await;
             return;
         };
-        
     }
 
     async fn init(&self) {
@@ -100,7 +95,9 @@ pub fn hzys() -> Matcher<MessageEvent> {
             huoziyinshua: Mutex::new(None),
         },
     )
-    .add_rule(rules::is_superuser())
-    .add_pre_matcher(prematchers::command_start())
-    .add_rule(rules::is_group_message_event())
+    .add_rule(rules::in_groups(vec![
+        "657065745".to_string(),
+        "711674260".to_string(),
+        "904639279".to_string(),
+    ]))
 }
