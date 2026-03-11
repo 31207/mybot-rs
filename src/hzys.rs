@@ -45,10 +45,15 @@ impl Handler<MessageEvent> for HZYS {
             matcher
                 .send_text("输入的句子不能超过100个字符")
                 .await;
+            return;
         }
         if let Some(huoziyinshua) = self.huoziyinshua.lock().await.as_mut() {
-            let result: Result<()> = huoziyinshua
-            .generate(&huoziyinshua_command.sentence, huoziyinshua_command.reverse);
+            let _ = huoziyinshua
+            .generate(&huoziyinshua_command.sentence, true);
+            let result = huoziyinshua.change_speed(huoziyinshua_command.speed);
+            if huoziyinshua_command.reverse {
+                let _ = huoziyinshua.reverse();
+            }
         match result {
             Ok(_) => {
                 let wav_base64 = if let Ok(w) = huoziyinshua.save_and_get_wav_base64() {
