@@ -7,6 +7,7 @@ fn main() {
     matchers.add_message_matchers(vec![
         meme_parser::meme_parser(),
         helper::helper(),
+        hzys::hzys(),
         ]);
     nb.add_plugin(matchers);
     nb.run()
