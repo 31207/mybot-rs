@@ -4,6 +4,7 @@ pub mod meme_info;
 pub mod meme_parser;
 pub mod arg_parser;
 pub mod hzys;
+pub mod otto_quotation;
 
 #[cfg(test)]
 mod tests {

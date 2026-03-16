@@ -1,5 +1,4 @@
 use crate::arg_parser::HuoziyinshuaCommand;
-use anyhow::Result;
 use clap::Parser;
 use huoziyinshua_rs::Huoziyinshua;
 use nonebot_rs::matcher::prelude::*;
