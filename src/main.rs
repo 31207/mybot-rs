@@ -8,6 +8,7 @@ fn main() {
         meme_parser::meme_parser(),
         helper::helper(),
         hzys::hzys(),
+        otto_quotation::otto_quotation(),
         ]);
     nb.add_plugin(matchers);
     nb.run()
