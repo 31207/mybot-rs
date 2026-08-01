@@ -2,8 +2,8 @@ use base64::Engine;
 use base64::prelude::BASE64_STANDARD;
 use nonebot_rs::message::UniMessage;
 use nonebot_rs::message::FileType;
-use nonebot_rs::matcher::prelude::*;
-use nonebot_rs::{event::MessageEvent, matcher::Handler, on_command};
+use builtin_plugins::matcher::prelude::*;
+use nonebot_rs::event::MessageEvent;
 use tokio::sync::Mutex;
 use tracing::{Level, event};
 pub struct OttoQuotation {
@@ -72,8 +72,8 @@ pub fn otto_quotation() -> Matcher<MessageEvent> {
         },
     )
     .add_rule(rules::in_groups(vec![
-        "657065745".to_string(),
+        // "657065745".to_string(),
         "711674260".to_string(),
-        "904639279".to_string(),
+        // "904639279".to_string(),
     ]))
 }

@@ -1,7 +1,7 @@
 use crate::arg_parser::HuoziyinshuaCommand;
 use clap::Parser;
 use huoziyinshua_rs::Huoziyinshua;
-use nonebot_rs::matcher::prelude::*;
+use builtin_plugins::matcher::prelude::*;
 use nonebot_rs::message::FileType;
 use nonebot_rs::message::UniMessage;
 use tokio::sync::Mutex;
@@ -20,7 +20,6 @@ impl Handler<MessageEvent> for HZYS {
             .trim()
             .split_ascii_whitespace()
             .collect();
-        println!("Received command: {:?}", cmd);
         let huoziyinshua_command = if let Ok(cmd) = HuoziyinshuaCommand::try_parse_from(cmd) {
             cmd
         } else {
@@ -95,8 +94,8 @@ pub fn hzys() -> Matcher<MessageEvent> {
         },
     )
     .add_rule(rules::in_groups(vec![
-        "657065745".to_string(),
+        // "657065745".to_string(),
         "711674260".to_string(),
-        "904639279".to_string(),
+        // "904639279".to_string(),
     ]))
 }
