@@ -1,6 +1,6 @@
 use crate::meme_info::MemeInfo;
 use builtin_plugins::matcher::prelude::*;
-use nonebot_rs::{Message,message::FileType, message::UniMessage};
+use nonebot_rs::{Message, message::FileType, message::UniMessage};
 use reqwest;
 use tokio::sync::Mutex;
 use tracing::{Level, event};
@@ -85,9 +85,9 @@ pub fn meme_parser() -> Matcher<MessageEvent> {
         },
     )
     .add_rule(rules::in_groups(vec![
-        // "657065745".to_string(),
+        "657065745".to_string(),
         "711674260".to_string(),
-        // "904639279".to_string(),
+        "904639279".to_string(),
     ]))
 }
 

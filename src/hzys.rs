@@ -1,7 +1,7 @@
 use crate::arg_parser::HuoziyinshuaCommand;
+use builtin_plugins::matcher::prelude::*;
 use clap::Parser;
 use huoziyinshua_rs::Huoziyinshua;
-use builtin_plugins::matcher::prelude::*;
 use nonebot_rs::message::FileType;
 use nonebot_rs::message::UniMessage;
 use tokio::sync::Mutex;
@@ -94,8 +94,8 @@ pub fn hzys() -> Matcher<MessageEvent> {
         },
     )
     .add_rule(rules::in_groups(vec![
-        // "657065745".to_string(),
+        "657065745".to_string(),
         "711674260".to_string(),
-        // "904639279".to_string(),
+        "904639279".to_string(),
     ]))
 }
