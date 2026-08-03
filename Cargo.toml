@@ -4,8 +4,8 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-nonebot_rs = {git = "https://github.com/31207/nonebot-rs.git", branch = "refactor/extract-builtin-plugins"}
-builtin_plugins = {git = "https://github.com/31207/nonebot-rs.git", branch = "refactor/extract-builtin-plugins"}
+nonebot_rs = {git = "https://github.com/31207/nonebot-rs.git", branch = "main"}
+builtin_plugins = {git = "https://github.com/31207/nonebot-rs.git", branch = "main"}
 
 huoziyinshua_rs = {git = "https://github.com/31207/huoziyinshua-rs.git", branch = "main"}
 toml = "1.1.2"

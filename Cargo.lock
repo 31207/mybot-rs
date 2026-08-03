@@ -129,17 +129,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d3fb67a6e08acf24fdeccbac2cb6ac4305825bd1f117462e0e6f2f193345ad56"
 
 [[package]]
-name = "async-recursion"
-version = "0.3.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d7d78656ba01f1b93024b7c3a0467f1608e4be67d725749fdcd7d2c7678fd7a2"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn 1.0.109",
-]
-
-[[package]]
 name = "async-trait"
 version = "0.1.91"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -213,7 +202,7 @@ dependencies = [
 [[package]]
 name = "builtin_plugins"
 version = "0.1.0"
-source = "git+https://github.com/31207/nonebot-rs.git?branch=refactor%2Fextract-builtin-plugins#c479a5305313f2f90c7ed2694f3c6cb8c3d52f39"
+source = "git+https://github.com/31207/nonebot-rs.git?branch=main#fa272039702f9aea6739a72d83dc8b92715363cb"
 dependencies = [
  "async-trait",
  "colored",
@@ -981,9 +970,9 @@ dependencies = [
 
 [[package]]
 name = "ipnet"
-version = "2.12.0"
+version = "2.12.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d98f6fed1fde3f8c21bc40a1abb88dd75e67924f9cffc3ef95607bad8017f8e2"
+checksum = "6a756c3fac73139e83f14c2d742155dd2b78d3ee56597b419a0579b7bdd6dd78"
 
 [[package]]
 name = "is_terminal_polyfill"
@@ -1149,9 +1138,8 @@ dependencies = [
 [[package]]
 name = "nonebot_rs"
 version = "0.3.0"
-source = "git+https://github.com/31207/nonebot-rs.git?branch=refactor%2Fextract-builtin-plugins#c479a5305313f2f90c7ed2694f3c6cb8c3d52f39"
+source = "git+https://github.com/31207/nonebot-rs.git?branch=main#fa272039702f9aea6739a72d83dc8b92715363cb"
 dependencies = [
- "async-recursion",
  "async-trait",
  "base64 0.22.1",
  "chrono",
