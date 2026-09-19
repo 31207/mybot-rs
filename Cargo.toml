@@ -4,8 +4,8 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-nonebot_rs = {git = "https://github.com/31207/nonebot-rs.git", branch = "main"}
-builtin_plugins = {git = "https://github.com/31207/nonebot-rs.git", branch = "main"}
+nonebot_rs = {git = "https://github.com/31207/nonebot-rs.git", branch = "feat/fine-grained-matcher"}
+builtin_plugins = {git = "https://github.com/31207/nonebot-rs.git", branch = "feat/fine-grained-matcher"}
 
 huoziyinshua_rs = {git = "https://github.com/31207/huoziyinshua-rs.git", branch = "main"}
 toml = "1.1.2"

@@ -1,5 +1,6 @@
 use crate::meme_info::MemeInfo;
 use builtin_plugins::matcher::prelude::*;
+use nonebot_rs::api_resp::RespMessage;
 use nonebot_rs::{Message, message::FileType, message::UniMessage};
 use reqwest;
 use tokio::sync::Mutex;
@@ -34,12 +35,10 @@ impl Handler<MessageEvent> for MemeParser {
         }
     }
 
-    on_message!(MessageEvent);
+    on_group_message!();
 
-    async fn handle(&self, event: MessageEvent, matcher: Matcher<MessageEvent>) {
-        let msg = event.get_message();
-
-        let (texts, images) = parse(&msg, &matcher).await;
+    async fn handle(&self, event: GroupMessageEvent, matcher: Matcher<MessageEvent>) {
+        let (texts, images) = parse(&event.message, &matcher).await;
         let meme_infos = self.meme_infos.lock().await;
         if texts.is_empty() {
             return;
@@ -92,20 +91,14 @@ pub fn meme_parser() -> Matcher<MessageEvent> {
 }
 
 /// 解析消息，提取文本，头像URL和图片URL，包括第一层回复消息中的图片url，丢弃其他类型消息
-async fn parse(msg: &Vec<Message>, matcher: &Matcher<MessageEvent>) -> (Vec<String>, Vec<String>) {
+async fn parse(msg: &[Message], matcher: &Matcher<MessageEvent>) -> (Vec<String>, Vec<String>) {
     let mut texts: Vec<String> = Vec::new();
     let mut images: Vec<String> = Vec::new();
 
     for segment in msg.iter() {
         match segment {
             Message::Text(t) => {
-                texts.append(
-                    t.text
-                        .split_whitespace()
-                        .map(|s| s.to_string())
-                        .collect::<Vec<String>>()
-                        .as_mut(),
-                );
+                texts.extend(t.text.split_whitespace().map(str::to_string));
             }
             Message::Image(i) => {
                 if let Some(url) = &i.url {
@@ -113,7 +106,7 @@ async fn parse(msg: &Vec<Message>, matcher: &Matcher<MessageEvent>) -> (Vec<Stri
                 }
             }
             Message::At(a) => {
-                if let Ok(_) = a.qq.parse::<u64>() {
+                if a.qq.parse::<u64>().is_ok() {
                     images.push(format!(
                         "http://q2.qlogo.cn/headimg_dl?dst_uin={}&spec=100",
                         a.qq
@@ -123,48 +116,40 @@ async fn parse(msg: &Vec<Message>, matcher: &Matcher<MessageEvent>) -> (Vec<Stri
                 };
             }
             Message::Reply(r) => {
-                let message_id = r.id.parse::<i32>().unwrap();
-                let replied_msg = matcher.get_msg(message_id).await;
-                let replied_msg = if let Some(msg) = replied_msg {
-                    msg
-                } else {
+                let Ok(message_id) = r.id.parse::<i32>() else {
+                    event!(Level::WARN, "回复消息ID解析失败: {}", r.id);
+                    continue;
+                };
+                let Some(replied_msg) = matcher.get_msg(message_id).await else {
                     event!(Level::ERROR, "获取回复消息失败: {}", message_id);
                     return (texts, images);
                 };
-                match replied_msg {
-                    nonebot_rs::api_resp::RespMessage::Group(g) => {
-                        let replied_msg_content = g.message;
-                        for segment in replied_msg_content.iter() {
-                            let segment = if let Message::Image(i) = segment {
-                                i
-                            } else {
-                                continue;
-                            };
-                            if let Some(url) = &segment.url {
-                                images.push(url.clone());
-                            }
-                        }
-                    }
-                    nonebot_rs::api_resp::RespMessage::Private(p) => {
-                        let replied_msg_content = p.message;
-                        for segment in replied_msg_content.iter() {
-                            let segment = if let Message::Image(i) = segment {
-                                i
-                            } else {
-                                continue;
-                            };
-                            if let Some(url) = &segment.url {
-                                images.push(url.clone());
-                            }
-                        }
-                    }
-                }
+                collect_image_urls(replied_segments(&replied_msg), &mut images);
             }
             _ => {}
         }
     }
 
     (texts, images)
+}
+
+/// 取回复消息中的消息段
+fn replied_segments(message: &RespMessage) -> &[Message] {
+    match message {
+        RespMessage::Group(g) => &g.message,
+        RespMessage::Private(p) => &p.message,
+    }
+}
+
+/// 收集消息段中的图片 URL
+fn collect_image_urls(segments: &[Message], images: &mut Vec<String>) {
+    for segment in segments {
+        if let Message::Image(i) = segment {
+            if let Some(url) = &i.url {
+                images.push(url.clone());
+            }
+        }
+    }
 }
 
 fn search_meme_by_keyword(keyword: &str, meme_infos: &Vec<MemeInfo>) -> Option<MemeInfo> {

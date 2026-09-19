@@ -1,9 +1,9 @@
+pub mod arg_parser;
 pub mod helper;
+pub mod hzys;
 pub mod meme_api;
 pub mod meme_info;
 pub mod meme_parser;
-pub mod arg_parser;
-pub mod hzys;
 pub mod otto_quotation;
 
 #[cfg(test)]
